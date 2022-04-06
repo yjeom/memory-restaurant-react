@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Kakaomap from "./Kakaomap";
+import React, { useState } from 'react';
+import KakaoMap from './KakaoMap';
 
-const Search= () => {
-  const [keyWord, setKeyWord] = useState("");
-  const [place, setPlace] = useState("");
+const Search = () => {
+  const [keyWord, setKeyWord] = useState('');
+  const [place, setPlace] = useState('');
 
   const onChange = (e) => {
     setKeyWord(e.target.value);
@@ -12,7 +12,7 @@ const Search= () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setPlace(keyWord);
-    setKeyWord("");
+    setKeyWord('');
   };
 
   return (
@@ -25,7 +25,7 @@ const Search= () => {
         />
         <button type="submit">검색</button>
       </form>
-      <Kakaomap searchPlace ={place} />
+      <KakaoMap searchPlace={place} />
     </>
   );
 };
