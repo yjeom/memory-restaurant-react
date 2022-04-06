@@ -1,0 +1,1 @@
+const SearchList = ({ places }) => {};
