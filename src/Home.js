@@ -1,13 +1,14 @@
-import { Link } from 'react-router-dom';
+import { ModalProvider } from './contexts/ModalContext';
+import Memo from './Memo';
 import Search from './Search';
 
 const Home = () => {
   return (
-    <div>
-      <h1>Home</h1>
-      <p> Wellcom to first page </p>
-      <Link to="/about">about</Link>
-      <Search />
+    <div style={{ padding: 20 }}>
+      <ModalProvider>
+        <Search />
+        <Memo />
+      </ModalProvider>
     </div>
   );
 };

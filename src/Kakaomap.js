@@ -1,12 +1,16 @@
 /*global kakao*/
-import classnames from 'classnames';
+import { Button, Grid } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import './KakaoApi.css';
+import Memo from './Memo';
+import { ModalConsumer } from '../src/contexts/ModalContext';
 
 const { kakao } = window;
 
 const KakaoMap = ({ searchPlace }) => {
   const [places, setPlaces] = useState([]);
+  const [memoOpen, setMemoOpen] = useState(false);
+
   useEffect(() => {
     var container = document.getElementById('map');
     var options = {
@@ -101,27 +105,43 @@ const KakaoMap = ({ searchPlace }) => {
 
   return (
     <div>
-      <div>
-        <div id="map" style={{ width: '500px', height: '400px' }}></div>
-      </div>
-      <div>
-        <div>
-          <ul id="placesList">
-            {places.map((place, index) => (
-              <li key={index} className="item">
-                <span className={`markerbg marker_${index + 1}`}></span>
-                <div className="info">
-                  <span>{place.road_address_name}</span>
-                  <span className="jibun gray">{place.address_name}</span>
-                  <span>{place.place_name}</span>
-                  <span className="tel">{place.phone}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div id="pagination"></div>
-      </div>
+      <Grid container>
+        <Grid item xs={6}>
+          <div id="map" style={{ width: '100%', height: '400px' }}></div>
+        </Grid>
+        <Grid item xs={6}>
+          <div>
+            <ul id="placesList">
+              {places.map((place, index) => (
+                <li key={index} className="item">
+                  <span className={`markerbg marker_${index + 1}`}></span>
+                  <div className="info">
+                    <b>{place.place_name}</b>
+                    <ModalConsumer>
+                      {({ actions }) => (
+                        <Button
+                          color="primary"
+                          onClick={() => {
+                            actions.setIsOpen(true);
+                            actions.setPlace(place);
+                          }}
+                        >
+                          리뷰작성
+                        </Button>
+                      )}
+                    </ModalConsumer>
+
+                    <span>{place.road_address_name}</span>
+                    <span className="jibun gray">{place.address_name}</span>
+                    <span className="tel">{place.phone}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div id="pagination"></div>
+        </Grid>
+      </Grid>
     </div>
   );
 };
