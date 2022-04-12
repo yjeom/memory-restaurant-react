@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const ModalContext = createContext({
   state: { isOpen: false, place: [] },
@@ -20,6 +20,7 @@ const ModalProvider = ({ children }) => {
     <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
   );
 };
+
 const { Consumer: ModalConsumer } = ModalContext;
 
 export { ModalProvider, ModalConsumer };
