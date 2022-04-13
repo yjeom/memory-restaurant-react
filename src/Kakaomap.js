@@ -2,16 +2,32 @@
 import { Button, Grid } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import './KakaoApi.css';
-import Memo from './Memo';
 import { ModalConsumer } from '../src/contexts/ModalContext';
+import MemoList from './MemoList';
+import axios from 'axios';
+import { API_BASE_URL } from './app-config';
 
 const { kakao } = window;
 
 const KakaoMap = ({ searchPlace }) => {
   const [places, setPlaces] = useState([]);
   const [memoOpen, setMemoOpen] = useState(false);
+  const [memoList, setMemoList] = useState([]);
 
+  function getMemoList(placeId) {
+    axios
+      .get(API_BASE_URL + '/placeMemoList/' + placeId + '/0')
+      .then((response) => {
+        console.log(response);
+        if (response.data === '' || response.data === null) {
+          alert('등록된 리뷰가 없습니다');
+        } else {
+          setMemoList(response.data.content);
+        }
+      });
+  }
   useEffect(() => {
+    setMemoList(null);
     var container = document.getElementById('map');
     var options = {
       center: new kakao.maps.LatLng(37.566826, 126.9786567),
@@ -116,7 +132,13 @@ const KakaoMap = ({ searchPlace }) => {
                 <li key={index} className="item">
                   <span className={`markerbg marker_${index + 1}`}></span>
                   <div className="info">
-                    <b>{place.place_name}</b>
+                    <b
+                      onClick={() => {
+                        getMemoList(place.id);
+                      }}
+                    >
+                      {place.place_name}
+                    </b>
                     <ModalConsumer>
                       {({ actions }) => (
                         <Button
@@ -140,6 +162,9 @@ const KakaoMap = ({ searchPlace }) => {
             </ul>
           </div>
           <div id="pagination"></div>
+        </Grid>
+        <Grid item xs={12}>
+          <MemoList responseMemoList={memoList} />
         </Grid>
       </Grid>
     </div>
