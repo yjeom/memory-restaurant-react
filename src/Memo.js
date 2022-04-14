@@ -20,7 +20,6 @@ import {
 import { PhotoCamera } from '@material-ui/icons';
 import axios from 'axios';
 import { API_BASE_URL } from './app-config';
-import { call } from './service/ApiService';
 
 const StyledRating = withStyles({
   iconFilled: {

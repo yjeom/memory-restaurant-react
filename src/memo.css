@@ -1,0 +1,22 @@
+.MuiListItem-root{
+    height: 150px;
+}
+.memoList{
+    height: 400px;
+    overflow: scroll;
+}
+.memoList-img{
+    width: 100%;
+    height: auto;
+}
+.memoList-info{
+    padding-left: 1rem;
+}
+.memoList-content{
+    white-space: pre-wrap;
+    height: 100px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical; 
+}

@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { MemoListProvider } from './contexts/MemoListContext';
 import { ModalProvider } from './contexts/ModalContext';
 import Memo from './Memo';
-import MemoList from './MemoList';
 import Search from './Search';
 
 const Home = () => {

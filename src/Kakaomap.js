@@ -11,20 +11,18 @@ const { kakao } = window;
 
 const KakaoMap = ({ searchPlace }) => {
   const [places, setPlaces] = useState([]);
-  const [memoOpen, setMemoOpen] = useState(false);
+  const [placeName, setPlaceName] = useState('');
   const [memoList, setMemoList] = useState([]);
 
   function getMemoList(placeId) {
-    axios
-      .get(API_BASE_URL + '/placeMemoList/' + placeId + '/0')
-      .then((response) => {
-        console.log(response);
-        if (response.data === '' || response.data === null) {
-          alert('등록된 리뷰가 없습니다');
-        } else {
-          setMemoList(response.data.content);
-        }
-      });
+    axios.get(API_BASE_URL + '/placeMemos/' + placeId).then((response) => {
+      console.log(response);
+      if (response.data === '' || response.data === null) {
+        alert('등록된 리뷰가 없습니다');
+      } else {
+        setMemoList(response.data);
+      }
+    });
   }
   useEffect(() => {
     setMemoList(null);
@@ -134,7 +132,8 @@ const KakaoMap = ({ searchPlace }) => {
                   <div className="info">
                     <b
                       onClick={() => {
-                        getMemoList(place.id);
+                        setPlaceName(place.place_name);
+                        getMemoList(place.id, place);
                       }}
                     >
                       {place.place_name}
@@ -164,7 +163,7 @@ const KakaoMap = ({ searchPlace }) => {
           <div id="pagination"></div>
         </Grid>
         <Grid item xs={12}>
-          <MemoList responseMemoList={memoList} />
+          <MemoList responseMemoList={memoList} responsePlaceName={placeName} />
         </Grid>
       </Grid>
     </div>
