@@ -92,23 +92,23 @@ const Memo = () => {
       'place',
       new Blob([JSON.stringify(state.place)], { type: 'application/json' }),
     );
+    const accessToken = localStorage.getItem('ACCESS_TOKEN');
     axios
       .post(API_BASE_URL + '/placeMemo', formData, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken,
         },
       })
       .then(function (response) {
         if (response.status == 200) {
+          console.log(response);
           alert('저장되었습니다');
           actions.setIsOpen(false);
           memoReset();
         }
       })
-      .catch((error) => {
-        console.log(error.response);
-        console.log(error.message);
-      });
+      .catch(function (error) {});
   }
   function memoReset() {
     setRating(2.5);

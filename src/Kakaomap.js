@@ -143,8 +143,13 @@ const KakaoMap = ({ searchPlace }) => {
                         <Button
                           color="primary"
                           onClick={() => {
-                            actions.setIsOpen(true);
-                            actions.setPlace(place);
+                            if (localStorage.getItem('ACCESS_TOKEN') !== null) {
+                              actions.setIsOpen(true);
+                              actions.setPlace(place);
+                            } else {
+                              alert('로그인 후 작성할 수 있습니다');
+                              window.location.href = '/login';
+                            }
                           }}
                         >
                           리뷰작성
