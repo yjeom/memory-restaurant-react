@@ -95,6 +95,8 @@ const MemoList = () => {
                           actions.setIsUpdate(true);
                           actions.setRating(memo.rating);
                           actions.setContent(memo.content);
+                          actions.setMemoId(memo.placeMemoId);
+                          actions.setPlace(memoList.listPlace);
                           actions.setIsOpen(true);
                         }}
                       >

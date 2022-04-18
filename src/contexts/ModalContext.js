@@ -7,6 +7,7 @@ const ModalContext = createContext({
     isUpdate: false,
     rating: '2.5',
     content: '',
+    memoId: 0,
   },
   actions: {
     setIsOpen: () => {},
@@ -14,6 +15,7 @@ const ModalContext = createContext({
     setIsUpdate: () => {},
     setRating: () => {},
     setContent: () => {},
+    setMemoId: () => {},
   },
 });
 
@@ -23,10 +25,18 @@ const ModalProvider = ({ children }) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [rating, setRating] = useState(2.5);
   const [content, setContent] = useState('');
+  const [memoId, setMemoId] = useState(0);
 
   const value = {
-    state: { isOpen, place, isUpdate, rating, content },
-    actions: { setIsOpen, setPlace, setIsUpdate, setRating, setContent },
+    state: { isOpen, place, isUpdate, rating, content, memoId },
+    actions: {
+      setIsOpen,
+      setPlace,
+      setIsUpdate,
+      setRating,
+      setContent,
+      setMemoId,
+    },
   };
   return (
     <ModalContext.Provider value={value}>{children}</ModalContext.Provider>

@@ -74,8 +74,8 @@ const Memo = () => {
   const { state, actions } = useContext(ModalContext);
   const { memoList, listFunc } = useContext(MemoListContext);
 
-  function submitHandler() {
-    var formData = new FormData();
+  function setFormData() {
+    let formData = new FormData();
     formData.append(
       'imgFile',
       document.getElementById('icon-button-file').files[0],
@@ -83,6 +83,7 @@ const Memo = () => {
     let data = {
       rating: state.rating,
       content: state.content,
+      memoId: state.memoId,
     };
     formData.append(
       'memo',
@@ -92,6 +93,10 @@ const Memo = () => {
       'place',
       new Blob([JSON.stringify(state.place)], { type: 'application/json' }),
     );
+    return formData;
+  }
+  function submitHandler() {
+    let formData = setFormData();
     const accessToken = localStorage.getItem('ACCESS_TOKEN');
     axios
       .post(API_BASE_URL + '/placeMemo', formData, {
@@ -115,11 +120,63 @@ const Memo = () => {
       })
       .catch(function (error) {});
   }
+  function updateHandler() {
+    const accessToken = localStorage.getItem('ACCESS_TOKEN');
+    let formData = setFormData();
+    formData.delete('place');
+    axios
+      .put(API_BASE_URL + '/placeMemo', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken,
+        },
+      })
+      .then(function (response) {
+        if (response.status == 200) {
+          console.log(response);
+          alert('수정되었습니다');
+          actions.setIsOpen(false);
+          memoReset();
+          if (memoList.isShow) {
+          }
+        }
+      })
+      .catch(function (error) {});
+  }
+
+  function deleteHandler() {
+    const accessToken = localStorage.getItem('ACCESS_TOKEN');
+    console.log(accessToken);
+    axios
+      .delete(API_BASE_URL + '/placeMemo', {
+        data: {
+          memoId: state.memoId,
+        },
+
+        headers: {
+          // 'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken,
+        },
+      })
+      .then(function (response) {
+        if (response.status == 200) {
+          console.log(response);
+          alert('삭제되었습니다');
+          actions.setIsOpen(false);
+          memoReset();
+          if (memoList.isShow) {
+          }
+        }
+      })
+      .catch(function (error) {});
+  }
+
   function memoReset() {
     actions.setIsUpdate(false);
     actions.setRating(2.5);
     setImgName('');
     actions.setContent('');
+    actions.setMemoId(0);
   }
   return (
     <div>
@@ -140,6 +197,13 @@ const Memo = () => {
               return false;
             }}
           >
+            <input
+              type="hidden"
+              value={state.memoId}
+              name="memo-id"
+              id="memo-id"
+            />
+
             <Grid container>
               <input
                 name="memo-place"
@@ -218,10 +282,20 @@ const Memo = () => {
               >
                 {state.isUpdate ? (
                   <div>
-                    <Button type="button" variant="contained" color="primary">
+                    <Button
+                      type="button"
+                      variant="contained"
+                      color="primary"
+                      onClick={updateHandler}
+                    >
                       수정하기
                     </Button>
-                    <Button type="button" variant="contained" color="primary">
+                    <Button
+                      type="button"
+                      variant="contained"
+                      color="primary"
+                      onClick={deleteHandler}
+                    >
                       삭제하기
                     </Button>
                   </div>
