@@ -38,8 +38,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MemoList = () => {
-  // const [memoList, setMemoList] = useState([]);
-  // const [placeName, setPlaceName] = useState('');
   const { state, actions } = useContext(ModalContext);
   const { memoList, listFunc } = useContext(MemoListContext);
   const classes = useStyles();
@@ -55,7 +53,6 @@ const MemoList = () => {
                   <Grid item className={classes.image}>
                     <img
                       className={classes.img}
-                      // alt="complex"
                       src={
                         memo.imgUrl != null
                           ? API_BASE_URL + memo.imgUrl
