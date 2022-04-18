@@ -1,18 +1,18 @@
 /*global kakao*/
 import { Button, Grid } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './KakaoApi.css';
-import { ModalConsumer } from '../src/contexts/ModalContext';
-import MemoList from './MemoList';
+import ModalContext from '../src/contexts/ModalContext';
 import axios from 'axios';
 import { API_BASE_URL } from './app-config';
+import MemoListContext from './contexts/MemoListContext';
 
 const { kakao } = window;
 
 const KakaoMap = ({ searchPlace }) => {
   const [places, setPlaces] = useState([]);
-  const [placeName, setPlaceName] = useState('');
-  const [memoList, setMemoList] = useState([]);
+  const { state, actions } = useContext(ModalContext);
+  const { memoList, listFunc } = useContext(MemoListContext);
 
   function getMemoList(placeId) {
     axios.get(API_BASE_URL + '/placeMemos/' + placeId).then((response) => {
@@ -20,12 +20,14 @@ const KakaoMap = ({ searchPlace }) => {
       if (response.data === '' || response.data === null) {
         alert('등록된 리뷰가 없습니다');
       } else {
-        setMemoList(response.data);
+        listFunc.setMemoList(response.data);
+        listFunc.setIsShow(true);
       }
     });
   }
   useEffect(() => {
-    setMemoList(null);
+    listFunc.setMemoList([]);
+    listFunc.setIsShow(false);
     var container = document.getElementById('map');
     var options = {
       center: new kakao.maps.LatLng(37.566826, 126.9786567),
@@ -132,30 +134,32 @@ const KakaoMap = ({ searchPlace }) => {
                   <div className="info">
                     <b
                       onClick={() => {
-                        setPlaceName(place.place_name);
+                        listFunc.setListPlace(place);
+                        // setPlaceName(place.place_name);
                         getMemoList(place.id, place);
+                        // actions.setPlace(place);
                       }}
                     >
                       {place.place_name}
                     </b>
-                    <ModalConsumer>
-                      {({ actions }) => (
-                        <Button
-                          color="primary"
-                          onClick={() => {
-                            if (localStorage.getItem('ACCESS_TOKEN') !== null) {
-                              actions.setIsOpen(true);
-                              actions.setPlace(place);
-                            } else {
-                              alert('로그인 후 작성할 수 있습니다');
-                              window.location.href = '/login';
-                            }
-                          }}
-                        >
-                          리뷰작성
-                        </Button>
-                      )}
-                    </ModalConsumer>
+                    {/* <ModalConsumer> */}
+                    {/* {({ actions }) => ( */}
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        if (localStorage.getItem('ACCESS_TOKEN') !== null) {
+                          actions.setIsOpen(true);
+                          actions.setPlace(place);
+                        } else {
+                          alert('로그인 후 작성할 수 있습니다');
+                          window.location.href = '/login';
+                        }
+                      }}
+                    >
+                      리뷰작성
+                    </Button>
+                    {/* )} */}
+                    {/* </ModalConsumer> */}
 
                     <span>{place.road_address_name}</span>
                     <span className="jibun gray">{place.address_name}</span>
@@ -167,9 +171,9 @@ const KakaoMap = ({ searchPlace }) => {
           </div>
           <div id="pagination"></div>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <MemoList responseMemoList={memoList} responsePlaceName={placeName} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );

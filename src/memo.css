@@ -14,9 +14,9 @@
 }
 .memoList-content{
     white-space: pre-wrap;
-    height: 100px;
+    /* height: 100px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical; 
+    -webkit-box-orient: vertical;  */
 }

@@ -20,6 +20,7 @@ import {
 import { PhotoCamera } from '@material-ui/icons';
 import axios from 'axios';
 import { API_BASE_URL } from './app-config';
+import MemoListContext from './contexts/MemoListContext';
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -69,10 +70,9 @@ const useStyles = makeStyles((theme) => ({
 const Memo = () => {
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
-  const [rating, setRating] = useState(2.5);
   const [imgName, setImgName] = useState('');
-  const [content, setContent] = useState('');
   const { state, actions } = useContext(ModalContext);
+  const { memoList, listFunc } = useContext(MemoListContext);
 
   function submitHandler() {
     var formData = new FormData();
@@ -81,8 +81,8 @@ const Memo = () => {
       document.getElementById('icon-button-file').files[0],
     );
     let data = {
-      rating: rating,
-      content: content,
+      rating: state.rating,
+      content: state.content,
     };
     formData.append(
       'memo',
@@ -106,14 +106,20 @@ const Memo = () => {
           alert('저장되었습니다');
           actions.setIsOpen(false);
           memoReset();
+          if (memoList.isShow) {
+            let reverse = memoList.memoList.reverse().concat(response.data);
+            let next = reverse.reverse();
+            listFunc.setMemoList(next);
+          }
         }
       })
       .catch(function (error) {});
   }
   function memoReset() {
-    setRating(2.5);
+    actions.setIsUpdate(false);
+    actions.setRating(2.5);
     setImgName('');
-    setContent('');
+    actions.setContent('');
   }
   return (
     <div>
@@ -147,11 +153,11 @@ const Memo = () => {
                   <Typography component="legend">점수</Typography>
                   <StyledRating
                     name="rating"
-                    value={rating}
+                    value={state.rating}
                     precision={0.5}
                     icon={<FavoriteIcon fontSize="inherit" />}
                     onChange={(event, newValue) => {
-                      setRating(newValue);
+                      actions.setRating(newValue);
                     }}
                   />
                 </Box>
@@ -199,8 +205,9 @@ const Memo = () => {
                   minRows={4}
                   variant="outlined"
                   onChange={(e) => {
-                    setContent(e.target.value);
+                    actions.setContent(e.target.value);
                   }}
+                  value={state.content}
                 />
               </Grid>
               <Grid
@@ -209,16 +216,27 @@ const Memo = () => {
                 justifyContent="flex-end"
                 alignItems="flex-end"
               >
-                <Button
-                  type="button"
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    submitHandler();
-                  }}
-                >
-                  작성완료
-                </Button>
+                {state.isUpdate ? (
+                  <div>
+                    <Button type="button" variant="contained" color="primary">
+                      수정하기
+                    </Button>
+                    <Button type="button" variant="contained" color="primary">
+                      삭제하기
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      submitHandler();
+                    }}
+                  >
+                    작성완료
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </form>

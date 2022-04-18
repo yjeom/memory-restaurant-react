@@ -1,9 +1,11 @@
-import { Grid, List, ListItem } from '@material-ui/core';
+import { Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import { Favorite } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import { withStyles } from '@material-ui/styles';
-import React, { useEffect, useState } from 'react';
-import { API_BASE_URL } from './app-config';
+import React, { useContext, useEffect, useState } from 'react';
+import { API_BASE_URL, HOST_URL } from './app-config';
+import MemoListContext from './contexts/MemoListContext';
+import ModalContext from './contexts/ModalContext';
 import './memo.css';
 
 const StyledRating = withStyles({
@@ -14,80 +16,98 @@ const StyledRating = withStyles({
     color: '#ff3d47',
   },
 })(Rating);
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+    maxWidth: 500,
+  },
+  image: {
+    width: 128,
+    height: 128,
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+}));
 
-const MemoList = ({ responseMemoList, responsePlaceName }) => {
-  const [memoList, setMemoList] = useState([]);
-  const [placeName, setPlaceName] = useState('');
-  useEffect(() => {
-    setMemoList(responseMemoList);
-    setPlaceName(responsePlaceName);
-  }, [responseMemoList]);
+const MemoList = () => {
+  // const [memoList, setMemoList] = useState([]);
+  // const [placeName, setPlaceName] = useState('');
+  const { state, actions } = useContext(ModalContext);
+  const { memoList, listFunc } = useContext(MemoListContext);
+  const classes = useStyles();
   return (
     <div className="memoList">
       <Grid container>
         <Grid item xs={6}>
-          {memoList && <h4> [{placeName}] 리뷰</h4>}
-          <List>
-            {memoList &&
-              memoList.map((memo, index) => (
-                <ListItem key={index} alignItems="flex-start">
-                  <Grid
-                    item
-                    xs={3}
-                    container
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
+          {memoList.isShow && <h4> [{memoList.listPlace.place_name}] 리뷰</h4>}
+          {memoList.isShow &&
+            memoList.memoList.map((memo, index) => (
+              <Paper key={index} className={classes.paper}>
+                <Grid container spacing={2}>
+                  <Grid item className={classes.image}>
                     <img
-                      className="memoList-img"
-                      src={API_BASE_URL + memo.imgUrl}
+                      className={classes.img}
+                      // alt="complex"
+                      src={
+                        memo.imgUrl != null
+                          ? API_BASE_URL + memo.imgUrl
+                          : HOST_URL + '/default.png'
+                      }
                     />
                   </Grid>
-                  <Grid item xs={9} className="memoList-info">
-                    <Grid
-                      item
-                      xs={12}
-                      container
-                      direction="row"
-                      justifyContent="flex-start"
-                      alignItems="flex-start"
-                    >
-                      <StyledRating
-                        name="rating"
-                        value={memo.rating}
-                        precision={0.5}
-                        icon={<Favorite fontSize="inherit" />}
-                        size="small"
-                        readOnly
-                      />
+                  <Grid item xs={12} sm container>
+                    <Grid item xs container direction="column" spacing={2}>
+                      <Grid item xs>
+                        <StyledRating
+                          name="rating"
+                          value={memo.rating}
+                          precision={0.5}
+                          icon={<Favorite fontSize="inherit" />}
+                          size="small"
+                          readOnly
+                        />
+                        <Typography
+                          gutterBottom
+                          variant="subtitle1"
+                          className="memoList-content"
+                        >
+                          {memo.content}
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          align="right"
+                        >
+                          {memo.regDate}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      container
-                      direction="row"
-                      justifyContent="flex-start"
-                      alignItems="flex-start"
-                    >
-                      <div className="memoList-content">{memo.content}</div>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      container
-                      direction="row"
-                      justifyContent="flex-end"
-                      alignItems="flex-end"
-                    >
-                      <span style={{ color: '#757575' }}>
-                        작성일: {memo.regDate}
-                      </span>
+                    <Grid item>
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          actions.setIsUpdate(true);
+                          actions.setRating(memo.rating);
+                          actions.setContent(memo.content);
+                          actions.setIsOpen(true);
+                        }}
+                      >
+                        편집하기
+                      </Button>
                     </Grid>
                   </Grid>
-                </ListItem>
-              ))}
-          </List>
+                </Grid>
+              </Paper>
+            ))}
         </Grid>
       </Grid>
     </div>

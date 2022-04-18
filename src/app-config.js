@@ -7,4 +7,4 @@ if (hostname == 'localhost') {
 }
 export const API_BASE_URL = `${backendHost}`;
 
-export const IMG_URL = '/Users/eom-yeji/img/';
+export const HOST_URL = 'http://localhost:3000';
