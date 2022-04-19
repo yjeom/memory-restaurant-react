@@ -6,6 +6,7 @@ import ModalContext from '../src/contexts/ModalContext';
 import axios from 'axios';
 import { API_BASE_URL } from './app-config';
 import MemoListContext from './contexts/MemoListContext';
+import jwtDecode from 'jwt-decode';
 
 const { kakao } = window;
 
@@ -135,15 +136,11 @@ const KakaoMap = ({ searchPlace }) => {
                     <b
                       onClick={() => {
                         listFunc.setListPlace(place);
-                        // setPlaceName(place.place_name);
                         getMemoList(place.id, place);
-                        // actions.setPlace(place);
                       }}
                     >
                       {place.place_name}
                     </b>
-                    {/* <ModalConsumer> */}
-                    {/* {({ actions }) => ( */}
                     <Button
                       color="primary"
                       onClick={() => {
@@ -158,8 +155,6 @@ const KakaoMap = ({ searchPlace }) => {
                     >
                       리뷰작성
                     </Button>
-                    {/* )} */}
-                    {/* </ModalConsumer> */}
 
                     <span>{place.road_address_name}</span>
                     <span className="jibun gray">{place.address_name}</span>

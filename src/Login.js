@@ -28,6 +28,10 @@ const Login = () => {
         console.log(response);
         localStorage.setItem('ACCESS_TOKEN', response.data.token);
         window.location.href = '/';
+      })
+      .catch(function (error) {
+        console.log(error.response);
+        alert(error.response.data.error);
       });
   }
   return (

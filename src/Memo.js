@@ -74,6 +74,14 @@ const Memo = () => {
   const { state, actions } = useContext(ModalContext);
   const { memoList, listFunc } = useContext(MemoListContext);
 
+  function validate() {
+    if (state.content === '') {
+      document.getElementById('content-error').style.display = 'block';
+      document.getElementById('content').focus();
+      return false;
+    }
+    return true;
+  }
   function setFormData() {
     let formData = new FormData();
     formData.append(
@@ -96,6 +104,10 @@ const Memo = () => {
     return formData;
   }
   function submitHandler() {
+    let check = validate();
+    if (!check) {
+      return;
+    }
     let formData = setFormData();
     const accessToken = localStorage.getItem('ACCESS_TOKEN');
     axios
@@ -138,6 +150,14 @@ const Memo = () => {
           actions.setIsOpen(false);
           memoReset();
           if (memoList.isShow) {
+            const back = memoList.memoList.filter(
+              (memoList) => memoList.placeMemoId > response.data.placeMemoId,
+            );
+            const front = memoList.memoList.filter(
+              (memoList) => memoList.placeMemoId < response.data.placeMemoId,
+            );
+            const next = back.concat(response.data).concat(front);
+            listFunc.setMemoList(next);
           }
         }
       })
@@ -146,11 +166,12 @@ const Memo = () => {
 
   function deleteHandler() {
     const accessToken = localStorage.getItem('ACCESS_TOKEN');
+    const deleteId = state.memoId;
     console.log(accessToken);
     axios
       .delete(API_BASE_URL + '/placeMemo', {
         data: {
-          memoId: state.memoId,
+          memoId: deleteId,
         },
 
         headers: {
@@ -165,6 +186,10 @@ const Memo = () => {
           actions.setIsOpen(false);
           memoReset();
           if (memoList.isShow) {
+            const next = memoList.memoList.filter(
+              (memoList) => memoList.placeMemoId !== deleteId,
+            );
+            listFunc.setMemoList(next);
           }
         }
       })
@@ -269,10 +294,24 @@ const Memo = () => {
                   minRows={4}
                   variant="outlined"
                   onChange={(e) => {
+                    if (e.target.value !== '') {
+                      document.getElementById('content-error').style.display =
+                        'none';
+                    }
                     actions.setContent(e.target.value);
                   }}
                   value={state.content}
                 />
+                <Typography
+                  id="content-error"
+                  variant="button"
+                  display="block"
+                  gutterBottom
+                  color="error"
+                  style={{ display: 'none' }}
+                >
+                  내용을 작성해주세요
+                </Typography>
               </Grid>
               <Grid
                 container

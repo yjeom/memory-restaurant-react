@@ -2,6 +2,7 @@ import { Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import { Favorite } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import { withStyles } from '@material-ui/styles';
+import jwtDecode from 'jwt-decode';
 import React, { useContext, useEffect, useState } from 'react';
 import { API_BASE_URL, HOST_URL } from './app-config';
 import MemoListContext from './contexts/MemoListContext';
@@ -41,6 +42,11 @@ const MemoList = () => {
   const { state, actions } = useContext(ModalContext);
   const { memoList, listFunc } = useContext(MemoListContext);
   const classes = useStyles();
+  const token = localStorage.getItem('ACCESS_TOKEN');
+  let member = 'member';
+  if (token !== null) {
+    member = jwtDecode(token).sub;
+  }
   return (
     <div className="memoList">
       <Grid container>
@@ -89,19 +95,21 @@ const MemoList = () => {
                       </Grid>
                     </Grid>
                     <Grid item>
-                      <Button
-                        color="primary"
-                        onClick={() => {
-                          actions.setIsUpdate(true);
-                          actions.setRating(memo.rating);
-                          actions.setContent(memo.content);
-                          actions.setMemoId(memo.placeMemoId);
-                          actions.setPlace(memoList.listPlace);
-                          actions.setIsOpen(true);
-                        }}
-                      >
-                        편집하기
-                      </Button>
+                      {member === memo.memberEmail ? (
+                        <Button
+                          color="primary"
+                          onClick={() => {
+                            actions.setIsUpdate(true);
+                            actions.setRating(memo.rating);
+                            actions.setContent(memo.content);
+                            actions.setMemoId(memo.placeMemoId);
+                            actions.setPlace(memoList.listPlace);
+                            actions.setIsOpen(true);
+                          }}
+                        >
+                          편집하기
+                        </Button>
+                      ) : null}
                     </Grid>
                   </Grid>
                 </Grid>

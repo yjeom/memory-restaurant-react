@@ -27,6 +27,10 @@ const SingUp = () => {
       })
       .then(function (response) {
         window.location.href = '/login';
+      })
+      .catch(function (error) {
+        console.log(error.response);
+        alert(error.response.data.error);
       });
   }
   return (
