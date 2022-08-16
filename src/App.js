@@ -6,13 +6,15 @@ import SingUp from './SingUp';
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signUp" element={<SingUp />} />
-      </Route>
-    </Routes>
+    <Router basename="/memory-restaurant-reac">
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signUp" element={<SingUp />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 
