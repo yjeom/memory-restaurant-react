@@ -97,10 +97,7 @@ const Memo = () => {
       'memo',
       new Blob([JSON.stringify(data)], { type: 'application/json' }),
     );
-    formData.append(
-      'place',
-      new Blob([JSON.stringify(state.place)], { type: 'application/json' }),
-    );
+    formData.append('place', new Blob([JSON.stringify(state.place)]));
     return formData;
   }
   function submitHandler() {
