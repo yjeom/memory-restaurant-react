@@ -6,7 +6,7 @@ import SingUp from './SingUp';
 
 const App = () => {
   return (
-    <Router basename="/memory-restaurant-reac">
+    <Router basename="/memory-restaurant-react">
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
