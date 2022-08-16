@@ -6,9 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/memory-restaurant-react">
     <App />
   </BrowserRouter>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
-
