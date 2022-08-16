@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/memory-restaurant-react/static/css/main.fb2f37d7.css",
-    "main.js": "/memory-restaurant-react/static/js/main.881f0d17.js",
+    "main.js": "/memory-restaurant-react/static/js/main.48646683.js",
     "index.html": "/memory-restaurant-react/index.html",
     "main.fb2f37d7.css.map": "/memory-restaurant-react/static/css/main.fb2f37d7.css.map",
-    "main.881f0d17.js.map": "/memory-restaurant-react/static/js/main.881f0d17.js.map"
+    "main.48646683.js.map": "/memory-restaurant-react/static/js/main.48646683.js.map"
   },
   "entrypoints": [
     "static/css/main.fb2f37d7.css",
-    "static/js/main.881f0d17.js"
+    "static/js/main.48646683.js"
   ]
 }
